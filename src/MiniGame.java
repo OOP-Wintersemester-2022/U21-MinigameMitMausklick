@@ -24,6 +24,8 @@ public class MiniGame extends GraphicsApp {
     @Override
     public void initialize() {
         setupCanvas();
+        counter = 0;
+        clickBall = new ClickBall(CANVAS_WIDTH, CANVAS_HEIGHT);
     }
 
     /*
@@ -34,11 +36,29 @@ public class MiniGame extends GraphicsApp {
     @Override
     public void draw() {
         drawBackground(BACKGROUND_COLOR);
+        clickBall.update();
+        clickBall.draw();
     }
 
     private void setupCanvas() {
         setCanvasSize(CANVAS_WIDTH, CANVAS_HEIGHT);
         setFrameRate(FRAME_RATE);
+    }
+
+    @Override
+    public void onMousePressed(MousePressedEvent mousePressedEvent) {
+        if (clickBall.hitTest(mousePressedEvent.getXPos(), mousePressedEvent.getYPos())) {
+            clickBall.changeDirection();
+            counter++;
+            System.out.println("You have " + counter + " points!");
+        }
+    }
+
+    public void onKeyPressed(KeyPressedEvent keyPressedEvent) {
+        if (keyPressedEvent.getKeyCode() == KeyPressedEvent.VK_ESCAPE) {
+            clickBall.stop();
+            counter = 0;
+        }
     }
 
     public static void main(String[] args) {
